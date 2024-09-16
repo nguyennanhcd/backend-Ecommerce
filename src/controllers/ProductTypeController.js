@@ -1,16 +1,16 @@
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
-const ProductTypeService = require("../services/ProductTypeService");
-const { validateRequiredInput } = require("../utils");
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
+const ProductTypeService = require('../services/ProductTypeService');
+const { validateRequiredInput } = require('../utils');
 
 const createProductType = async (req, res) => {
   try {
-    const requiredFields = validateRequiredInput(req.body, ["name", "slug"]);
+    const requiredFields = validateRequiredInput(req.body, ['name', 'slug']);
 
     if (requiredFields?.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-        message: `The field ${requiredFields.join(", ")} is required`,
+        message: `The field ${requiredFields.join(', ')} is required`,
         data: null,
       });
     }
@@ -24,9 +24,9 @@ const createProductType = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -37,7 +37,7 @@ const updateProductType = async (req, res) => {
     const productTypeId = req.params.id;
     if (!productTypeId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field productTypeId is required`,
       });
@@ -55,9 +55,9 @@ const updateProductType = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -68,7 +68,7 @@ const getDetailsProductType = async (req, res) => {
     const productTypeId = req.params.id;
     if (!productTypeId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field productTypeId is required`,
       });
@@ -85,9 +85,9 @@ const getDetailsProductType = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -98,7 +98,7 @@ const deleteProductType = async (req, res) => {
     const productTypeId = req.params.id;
     if (!productTypeId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field productTypeId is required`,
       });
@@ -112,11 +112,10 @@ const deleteProductType = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
-    console.log("eeee", {e})
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -127,7 +126,7 @@ const deleteManyProductType = async (req, res) => {
     const ids = req.body.productTypeIds;
     if (!ids || !ids.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field userIds is required`,
       });
@@ -142,9 +141,9 @@ const deleteManyProductType = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -163,9 +162,9 @@ const getAllProductType = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }

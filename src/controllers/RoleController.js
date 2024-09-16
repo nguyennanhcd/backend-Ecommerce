@@ -1,19 +1,19 @@
-const RoleService = require("../services/RoleService");
+const RoleService = require('../services/RoleService');
 const {
   validateRequiredInput,
   getAllPermissionValues,
   existedPermissionRole,
-} = require("../utils");
-const { CONFIG_MESSAGE_ERRORS, CONFIG_PERMISSIONS } = require("../configs");
+} = require('../utils');
+const { CONFIG_MESSAGE_ERRORS, CONFIG_PERMISSIONS } = require('../configs');
 
 const createRole = async (req, res) => {
   try {
-    const requiredFields = validateRequiredInput(req.body, ["name"]);
+    const requiredFields = validateRequiredInput(req.body, ['name']);
     if (requiredFields?.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-        message: `The field ${requiredFields.join(", ")} is required`,
+        message: `The field ${requiredFields.join(', ')} is required`,
       });
     }
     const response = await RoleService.createRole(req.body);
@@ -26,9 +26,9 @@ const createRole = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -40,7 +40,7 @@ const updateRole = async (req, res) => {
     const dataBody = req.body;
     if (!roleId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field roleId is required`,
         data: null,
@@ -48,10 +48,10 @@ const updateRole = async (req, res) => {
     } else if (dataBody.permissions && dataBody.permissions.length > 0) {
       if (!existedPermissionRole(dataBody.permissions)) {
         return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-          status: "Error",
+          status: 'Error',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           message: `The ${dataBody.permissions?.join(
-            ", "
+            ', '
           )} is not contained system`,
           data: null,
         });
@@ -66,11 +66,10 @@ const updateRole = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
-    console.log("eee", {e})
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -81,7 +80,7 @@ const deleteRole = async (req, res) => {
     const roleId = req.params.id;
     if (!roleId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field roleId is required`,
       });
@@ -95,9 +94,9 @@ const deleteRole = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -108,7 +107,7 @@ const deleteManyRole = async (req, res) => {
     const ids = req.body.roleIds;
     if (!ids || !ids.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field roleIds is required`,
       });
@@ -123,9 +122,9 @@ const deleteManyRole = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -144,9 +143,9 @@ const getAllRole = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -157,7 +156,7 @@ const getDetailsRole = async (req, res) => {
     const roleId = req.params.id;
     if (!roleId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field roleId is required`,
       });
@@ -172,9 +171,9 @@ const getDetailsRole = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }

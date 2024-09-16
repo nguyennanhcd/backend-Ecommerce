@@ -1,17 +1,17 @@
-const User = require("../models/UserModel");
-const bcrypt = require("bcrypt");
-const { generateToken } = require("./JwtService");
+const User = require('../models/UserModel');
+const bcrypt = require('bcrypt');
+const { generateToken } = require('./JwtService');
 const {
   CONFIG_MESSAGE_ERRORS,
   CONFIG_PERMISSIONS,
   CONFIG_USER_TYPE,
-} = require("../configs");
-const EmailService = require("../services/EmailService");
-const dotenv = require("dotenv");
-const { addToBlacklist, isAdminPermission } = require("../utils");
+} = require('../configs');
+const EmailService = require('../services/EmailService');
+const dotenv = require('dotenv');
+const { addToBlacklist, isAdminPermission } = require('../utils');
 dotenv.config();
-const { OAuth2Client } = require("google-auth-library");
-const Role = require("../models/RoleModel");
+const { OAuth2Client } = require('google-auth-library');
+const Role = require('../models/RoleModel');
 
 const registerUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
@@ -21,15 +21,15 @@ const registerUser = (newUser) => {
         email: email,
       });
       const basicRole = await Role.findOne({
-        name: "Basic"
+        name: 'Basic',
       });
       if (existedUser !== null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-          message: "The email of user is existed",
+          message: 'The email of user is existed',
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const hash = bcrypt.hashSync(password, 10);
@@ -37,15 +37,15 @@ const registerUser = (newUser) => {
         email,
         password: hash,
         status: 1,
-        role: basicRole._id
+        role: basicRole._id,
       });
       if (createdUser) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Register user success",
-          typeError: "",
+          message: 'Register user success',
+          typeError: '',
           data: createdUser,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       }
     } catch (e) {
@@ -61,16 +61,16 @@ const loginUser = (userLogin) => {
       const checkUser = await User.findOne({
         email: email,
       }).populate({
-        path: "role",
-        select: "name permissions",
+        path: 'role',
+        select: 'name permissions',
       });
       if (checkUser === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The username or password is wrong",
+          message: 'The username or password is wrong',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const comparePassword = bcrypt.compareSync(password, checkUser.password);
@@ -78,10 +78,10 @@ const loginUser = (userLogin) => {
       if (!comparePassword) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The username or password is wrong",
+          message: 'The username or password is wrong',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
@@ -105,9 +105,9 @@ const loginUser = (userLogin) => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Login Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Login Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: checkUser,
         access_token,
         refresh_token,
@@ -124,9 +124,9 @@ const logoutUser = (res, accessToken) => {
       // addToBlacklist(accessToken);
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "logout Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'logout Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: null,
       });
     } catch (e) {
@@ -145,10 +145,10 @@ const updateAuthMe = (id, data, isPermission) => {
       if (!checkUser) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The user is not existed",
+          message: 'The user is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -162,10 +162,10 @@ const updateAuthMe = (id, data, isPermission) => {
         if (existedName !== null) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-            message: "The email of user is existed",
+            message: 'The email of user is existed',
             typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
@@ -179,39 +179,41 @@ const updateAuthMe = (id, data, isPermission) => {
           message: "You can't change admin's email or status",
           typeError: CONFIG_MESSAGE_ERRORS.UNAUTHORIZED.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
-        return
+        return;
       }
 
       if (data.addresses) {
-        const defaultAddresses = data.addresses.filter(address => address.isDefault);
+        const defaultAddresses = data.addresses.filter(
+          (address) => address.isDefault
+        );
         if (defaultAddresses.length > 1) {
           resolve({
             status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-            message: "Only one default address is allowed",
+            message: 'Only one default address is allowed',
             typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
             data: null,
-            statusMessage: "Error",
+            statusMessage: 'Error',
           });
           return;
         }
       }
 
       const updatedUser = await User.findByIdAndUpdate(id, data, { new: true })
-        .select("-password")
+        .select('-password')
         .populate({
-          path: "role",
-          select: "name permissions",
+          path: 'role',
+          select: 'name permissions',
         })
         .lean();
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Updated user success",
-        typeError: "",
+        message: 'Updated user success',
+        typeError: '',
         data: updatedUser,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -238,19 +240,19 @@ const changePasswordMe = (userId, data, res, accessToken) => {
       if (checkUser === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The user is not existed",
+          message: 'The user is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       if (!compareCurrentPassword) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-          message: "The  currentPassword is wrong",
+          message: 'The  currentPassword is wrong',
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
@@ -260,7 +262,7 @@ const changePasswordMe = (userId, data, res, accessToken) => {
           message: "The new password isn't not duplicate current password",
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const hash = bcrypt.hashSync(newPassword, 10);
@@ -269,10 +271,10 @@ const changePasswordMe = (userId, data, res, accessToken) => {
       await checkUser.save();
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "ChangePassword user success",
-        typeError: "",
+        message: 'ChangePassword user success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -284,16 +286,16 @@ const forgotPasswordMe = (email) => {
   return new Promise(async (resolve, reject) => {
     try {
       const checkUser = await User.findOne({
-        email: "admin@gmail.com",
-      }).select("-password");
+        email: 'admin@gmail.com',
+      }).select('-password');
 
       if (checkUser === null) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The email is not existed",
+          message: 'The email is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
@@ -314,10 +316,10 @@ const forgotPasswordMe = (email) => {
       );
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Forgot password success",
-        typeError: "",
+        message: 'Forgot password success',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -338,10 +340,10 @@ const resetPasswordMe = (secretKey, newPassword) => {
       if (!user) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "Invalid or expired token",
+          message: 'Invalid or expired token',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
         return;
       }
@@ -351,7 +353,7 @@ const resetPasswordMe = (secretKey, newPassword) => {
           message: "The new password isn't not duplicate current password",
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const hash = bcrypt.hashSync(newPassword, 10);
@@ -363,10 +365,10 @@ const resetPasswordMe = (secretKey, newPassword) => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Password reset successfully",
-        typeError: "",
+        message: 'Password reset successfully',
+        typeError: '',
         data: null,
-        statusMessage: "Success",
+        statusMessage: 'Success',
       });
     } catch (e) {
       reject(e);
@@ -420,10 +422,10 @@ const registerGoogle = (idToken) => {
       if (!payload) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "Validate user is error",
+          message: 'Validate user is error',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const { email } = payload;
@@ -432,10 +434,10 @@ const registerGoogle = (idToken) => {
       if (checkUser) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-          message: "The user is existed",
+          message: 'The user is existed',
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const newUser = await User.create({
@@ -445,10 +447,10 @@ const registerGoogle = (idToken) => {
       if (newUser) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Register user success",
-          typeError: "",
+          message: 'Register user success',
+          typeError: '',
           data: newUser,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       }
     } catch (e) {
@@ -464,10 +466,10 @@ const loginGoogle = (idToken) => {
       if (!payload) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "Validate user is error",
+          message: 'Validate user is error',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const { email } = payload;
@@ -476,10 +478,10 @@ const loginGoogle = (idToken) => {
       if (!checkUser) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The user is not existed",
+          message: 'The user is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const access_token = await generateToken(
@@ -502,9 +504,9 @@ const loginGoogle = (idToken) => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Login Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Login Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: checkUser,
         access_token,
         refresh_token,
@@ -522,10 +524,10 @@ const registerFacebook = (idToken) => {
       if (!payload) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "Validate user is error",
+          message: 'Validate user is error',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const { email } = payload;
@@ -534,10 +536,10 @@ const registerFacebook = (idToken) => {
       if (checkUser) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.status,
-          message: "The user is existed",
+          message: 'The user is existed',
           typeError: CONFIG_MESSAGE_ERRORS.ALREADY_EXIST.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const newUser = await User.create({
@@ -547,10 +549,10 @@ const registerFacebook = (idToken) => {
       if (newUser) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-          message: "Register user success",
-          typeError: "",
+          message: 'Register user success',
+          typeError: '',
           data: newUser,
-          statusMessage: "Success",
+          statusMessage: 'Success',
         });
       }
     } catch (e) {
@@ -566,10 +568,10 @@ const loginFacebook = (idToken) => {
       if (!payload) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "Validate user is error",
+          message: 'Validate user is error',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
       const { email } = payload;
@@ -578,10 +580,10 @@ const loginFacebook = (idToken) => {
       if (!checkUser) {
         resolve({
           status: CONFIG_MESSAGE_ERRORS.INVALID.status,
-          message: "The user is not existed",
+          message: 'The user is not existed',
           typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
           data: null,
-          statusMessage: "Error",
+          statusMessage: 'Error',
         });
       }
 
@@ -605,9 +607,9 @@ const loginFacebook = (idToken) => {
 
       resolve({
         status: CONFIG_MESSAGE_ERRORS.ACTION_SUCCESS.status,
-        message: "Login Success",
-        typeError: "",
-        statusMessage: "Success",
+        message: 'Login Success',
+        typeError: '',
+        statusMessage: 'Success',
         data: checkUser,
         access_token,
         refresh_token,
