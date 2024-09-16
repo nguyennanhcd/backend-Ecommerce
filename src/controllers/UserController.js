@@ -1,6 +1,6 @@
-const UserService = require("../services/UserService");
-const { validateRequiredInput } = require("../utils");
-const { CONFIG_MESSAGE_ERRORS } = require("../configs");
+const UserService = require('../services/UserService');
+const { validateRequiredInput } = require('../utils');
+const { CONFIG_MESSAGE_ERRORS } = require('../configs');
 
 const createUser = async (req, res) => {
   try {
@@ -14,32 +14,32 @@ const createUser = async (req, res) => {
     const isCheckPhone = REGEX_PHONE.test(phoneNumber);
 
     const requiredFields = validateRequiredInput(req.body, [
-      "email",
-      "password",
+      'email',
+      'password',
     ]);
 
     if (requiredFields?.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-        message: `The field ${requiredFields.join(", ")} is required`,
+        message: `The field ${requiredFields.join(', ')} is required`,
       });
     } else if (!isCheckEmail) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "INVALID",
+        status: 'INVALID',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
-        message: "The field must a email",
+        message: 'The field must a email',
       });
     } else if (!isCheckPhone) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "INVALID",
+        status: 'INVALID',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message:
-          "Phone number must not contain letters and must be at least 9 numbers",
+          'Phone number must not contain letters and must be at least 9 numbers',
       });
     } else if (!isCheckPassword) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message:
           'The password must be at least 6 characters long and include uppercase letters, lowercase letters, numbers, and special characters."',
@@ -54,11 +54,11 @@ const createUser = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
-    console.log("e", e);
+    console.log('e', e);
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -69,7 +69,7 @@ const updateUser = async (req, res) => {
     const userId = req.params.id;
     if (!userId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field userId is required`,
       });
@@ -84,9 +84,9 @@ const updateUser = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -97,7 +97,7 @@ const deleteUser = async (req, res) => {
     const userId = req.params.id;
     if (!userId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field userId is required`,
       });
@@ -111,9 +111,9 @@ const deleteUser = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -124,7 +124,7 @@ const deleteMany = async (req, res) => {
     const ids = req.body.userIds;
     if (!ids || !ids.length) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field userIds is required`,
       });
@@ -139,9 +139,9 @@ const deleteMany = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -159,11 +159,11 @@ const getAllUser = async (req, res) => {
       status: statusMessage,
     });
   } catch (e) {
-    console.log("ee", {e})
+    console.log('e', { e });
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
@@ -174,7 +174,7 @@ const getDetailsUser = async (req, res) => {
     const userId = req.params.id;
     if (!userId) {
       return res.status(CONFIG_MESSAGE_ERRORS.INVALID.status).json({
-        status: "Error",
+        status: 'Error',
         typeError: CONFIG_MESSAGE_ERRORS.INVALID.type,
         message: `The field userId is required`,
       });
@@ -189,9 +189,9 @@ const getDetailsUser = async (req, res) => {
     });
   } catch (e) {
     return res.status(CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.status).json({
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
       data: null,
-      status: "Error",
+      status: 'Error',
       typeError: CONFIG_MESSAGE_ERRORS.INTERNAL_ERROR.type,
     });
   }
